@@ -47,14 +47,15 @@ public class MavenEffectivePomDumper {
   @Nullable
   public static String evaluateEffectivePom(final Maven3ServerEmbedderImpl embedder,
                                             @NotNull final File file,
-                                            @NotNull List<String> activeProfiles)
+                                            @NotNull List<String> activeProfiles,
+                                            @NotNull List<String> inactiveProfiles)
     throws RemoteException, MavenServerProcessCanceledException {
 
     final StringWriter w = new StringWriter();
 
     try {
       final MavenExecutionRequest
-        request = embedder.createRequest(file, activeProfiles, Collections.<String>emptyList(), Collections.<String>emptyList());
+        request = embedder.createRequest(file, activeProfiles, inactiveProfiles, Collections.<String>emptyList());
 
       embedder.executeWithMavenSession(request, new Runnable() {
         @Override

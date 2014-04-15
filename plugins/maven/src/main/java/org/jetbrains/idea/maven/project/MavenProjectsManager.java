@@ -186,9 +186,10 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
     doInit(false);
   }
 
-  private void initNew(List<VirtualFile> files, List<String> explicitProfiles) {
+  private void initNew(List<VirtualFile> files, MavenExplicitProfiles explicitProfiles) {
     myState.originalFiles = MavenUtil.collectPaths(files);
-    getWorkspaceSettings().setEnabledProfiles(explicitProfiles);
+    getWorkspaceSettings().setEnabledProfiles(explicitProfiles.getEnabledProfiles());
+    getWorkspaceSettings().setDisabledProfiles(explicitProfiles.getDisabledProfiles());
     doInit(true);
   }
 
@@ -244,7 +245,9 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
   }
 
   private void applyStateToTree() {
-    myProjectsTree.resetManagedFilesPathsAndProfiles(myState.originalFiles, getWorkspaceSettings().enabledProfiles);
+    MavenWorkspaceSettings settings = getWorkspaceSettings();
+    MavenExplicitProfiles explicitProfiles = new MavenExplicitProfiles(settings.enabledProfiles, settings.disabledProfiles);
+    myProjectsTree.resetManagedFilesPathsAndProfiles(myState.originalFiles, explicitProfiles);
     myProjectsTree.setIgnoredFilesPaths(new ArrayList<String>(myState.ignoredFiles));
     myProjectsTree.setIgnoredFilesPatterns(myState.ignoredPathMasks);
   }
@@ -477,11 +480,11 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
   }
 
   @TestOnly
-  public void resetManagedFilesAndProfilesInTests(List<VirtualFile> files, List<String> profiles) {
+  public void resetManagedFilesAndProfilesInTests(List<VirtualFile> files, MavenExplicitProfiles profiles) {
     myWatcher.resetManagedFilesAndProfilesInTests(files, profiles);
   }
 
-  public void addManagedFilesWithProfiles(List<VirtualFile> files, List<String> profiles) {
+  public void addManagedFilesWithProfiles(List<VirtualFile> files, MavenExplicitProfiles profiles) {
     if (!isInitialized()) {
       initNew(files, profiles);
     }
@@ -491,7 +494,7 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
   }
 
   public void addManagedFiles(@NotNull List<VirtualFile> files) {
-    addManagedFilesWithProfiles(files, Collections.<String>emptyList());
+    addManagedFilesWithProfiles(files, MavenExplicitProfiles.NONE);
   }
 
   public void addManagedFilesOrUnignore(@NotNull List<VirtualFile> files) {
@@ -509,12 +512,12 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
   }
 
   @NotNull
-  public Collection<String> getExplicitProfiles() {
-    if (!isInitialized()) return Collections.emptyList();
+  public MavenExplicitProfiles getExplicitProfiles() {
+    if (!isInitialized()) return MavenExplicitProfiles.NONE;
     return myProjectsTree.getExplicitProfiles();
   }
 
-  public void setExplicitProfiles(@NotNull Collection<String> profiles) {
+  public void setExplicitProfiles(@NotNull MavenExplicitProfiles profiles) {
     myWatcher.setExplicitProfiles(profiles);
   }
 
@@ -779,8 +782,10 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
                                                  @Override
                                                  public void run(MavenEmbedderWrapper embedder) throws MavenProcessCanceledException {
                                                    try {
+                                                     MavenExplicitProfiles profiles = mavenProject.getActivatedProfilesIds();
                                                      String res =
-                                                       embedder.evaluateEffectivePom(mavenProject.getFile(), mavenProject.getActivatedProfilesIds());
+                                                       embedder.evaluateEffectivePom(mavenProject.getFile(), profiles.getEnabledProfiles(),
+                                                                                     profiles.getDisabledProfiles());
                                                      consumer.consume(res);
                                                    }
                                                    catch (UnsupportedOperationException e) {
