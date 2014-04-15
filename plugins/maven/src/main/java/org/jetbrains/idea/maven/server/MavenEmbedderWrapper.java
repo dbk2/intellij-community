@@ -91,11 +91,13 @@ public abstract class MavenEmbedderWrapper extends RemoteObjectWrapper<MavenServ
 
   @NotNull
   public MavenServerExecutionResult resolveProject(@NotNull final VirtualFile file,
-                                                    @NotNull final Collection<String> activeProfiles) throws MavenProcessCanceledException {
+                                                   @NotNull final Collection<String> activeProfiles,
+                                                   @NotNull final Collection<String> inactiveProfiles)
+    throws MavenProcessCanceledException {
     return perform(new RetriableCancelable<MavenServerExecutionResult>() {
       @Override
       public MavenServerExecutionResult execute() throws RemoteException, MavenServerProcessCanceledException {
-        return getOrCreateWrappee().resolveProject(new File(file.getPath()), activeProfiles);
+        return getOrCreateWrappee().resolveProject(new File(file.getPath()), activeProfiles, inactiveProfiles);
       }
     });
   }
@@ -153,12 +155,13 @@ public abstract class MavenEmbedderWrapper extends RemoteObjectWrapper<MavenServ
   @NotNull
   public MavenServerExecutionResult execute(@NotNull final VirtualFile file,
                                              @NotNull final Collection<String> activeProfiles,
+                                             @NotNull final Collection<String> inactiveProfiles,
                                              @NotNull final List<String> goals) throws MavenProcessCanceledException {
     return perform(new RetriableCancelable<MavenServerExecutionResult>() {
       @Override
       public MavenServerExecutionResult execute() throws RemoteException, MavenServerProcessCanceledException {
         return getOrCreateWrappee()
-          .execute(new File(file.getPath()), activeProfiles, Collections.<String>emptyList(), goals, Collections.<String>emptyList(), false,
+          .execute(new File(file.getPath()), activeProfiles, inactiveProfiles, goals, Collections.<String>emptyList(), false,
                    false);
       }
     });

@@ -52,6 +52,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.idea.maven.execution.*;
 import org.jetbrains.idea.maven.model.MavenArtifact;
+import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 import org.jetbrains.idea.maven.project.MavenArtifactDownloader;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
@@ -395,7 +396,7 @@ public abstract class MavenImportingTestCase extends MavenTestCase {
   }
 
   protected void readProjects(List<VirtualFile> files, String... profiles) {
-    myProjectsManager.resetManagedFilesAndProfilesInTests(files, Arrays.asList(profiles));
+    myProjectsManager.resetManagedFilesAndProfilesInTests(files, new MavenExplicitProfiles(Arrays.asList(profiles)));
     waitForReadingCompletion();
   }
 

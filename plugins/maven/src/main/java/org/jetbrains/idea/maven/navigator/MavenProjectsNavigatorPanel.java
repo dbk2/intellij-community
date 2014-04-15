@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.execution.MavenGoalLocation;
 import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.model.MavenConstants;
+import org.jetbrains.idea.maven.model.MavenProfileKind;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.idea.maven.utils.MavenDataKeys;
@@ -200,9 +201,9 @@ public class MavenProjectsNavigatorPanel extends SimpleToolWindowPanel implement
 
   private Object extractProfiles() {
     final List<MavenProjectsStructure.ProfileNode> nodes = getSelectedNodes(MavenProjectsStructure.ProfileNode.class);
-    final List<String> profiles = new ArrayList<String>();
+    final Map<String, MavenProfileKind> profiles = new THashMap<String, MavenProfileKind>();
     for (MavenProjectsStructure.ProfileNode node : nodes) {
-      profiles.add(node.getProfileName());
+      profiles.put(node.getProfileName(), node.getState());
     }
     return profiles;
   }

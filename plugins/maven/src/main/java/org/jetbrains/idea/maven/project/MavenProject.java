@@ -527,11 +527,11 @@ public class MavenProject {
 
     return res;
   }
-  
+
   //private String getArgumentsForAnnotationProcessor(){
   //  return getCompilerArguments() + formatCompilerArgument(getCompilerArgument()) ;
   //}
-  
+
   //private static String formatCompilerArgument(String compilerArgument){
   //  String[] splitArguments = compilerArgument.split("\\s+");
   //  List<String> formattedArguments = new ArrayList<String>();
@@ -578,7 +578,7 @@ public class MavenProject {
 
   @NotNull
   public MavenProjectChanges read(@NotNull MavenGeneralSettings generalSettings,
-                                  @NotNull Collection<String> profiles,
+                                  @NotNull MavenExplicitProfiles profiles,
                                   @NotNull MavenProjectReader reader,
                                   @NotNull MavenProjectReaderProjectLocator locator) {
     return set(reader.readProject(generalSettings, myFile, profiles, locator), generalSettings, true, false, true);
@@ -775,7 +775,7 @@ public class MavenProject {
   }
 
   @NotNull
-  public Collection<String> getActivatedProfilesIds() {
+  public MavenExplicitProfiles getActivatedProfilesIds() {
     return myState.myActivatedProfilesIds;
   }
 
@@ -1066,7 +1066,7 @@ public class MavenProject {
     Map<String, String> myModelMap;
 
     Collection<String> myProfilesIds;
-    Collection<String> myActivatedProfilesIds;
+    MavenExplicitProfiles myActivatedProfilesIds;
 
     Collection<MavenProjectProblem> myReadingProblems;
     Set<MavenId> myUnresolvedArtifactIds;

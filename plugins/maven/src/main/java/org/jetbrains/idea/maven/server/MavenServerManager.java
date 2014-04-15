@@ -44,6 +44,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.model.MavenModel;
 import org.jetbrains.idea.maven.project.MavenConsole;
@@ -371,7 +372,7 @@ public class MavenServerManager extends RemoteObjectWrapper<MavenServer> impleme
 
   public ProfileApplicationResult applyProfiles(final MavenModel model,
                                                 final File basedir,
-                                                final Collection<String> explicitProfiles,
+                                                final MavenExplicitProfiles explicitProfiles,
                                                 final Collection<String> alwaysOnProfiles) {
     return perform(new Retriable<ProfileApplicationResult>() {
       @Override

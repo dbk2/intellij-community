@@ -25,6 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.idea.maven.MavenImportingTestCase;
 import org.jetbrains.idea.maven.importing.MavenDefaultModifiableModelsProvider;
 import org.jetbrains.idea.maven.importing.MavenRootModelAdapter;
+import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -724,7 +725,7 @@ public abstract class ResourceFilteringTest extends MavenImportingTestCase {
     compileModules("project");
     assertResult("target/classes/file.properties", "value=val1");
 
-    myProjectsManager.setExplicitProfiles(Arrays.asList("two"));
+    myProjectsManager.setExplicitProfiles(new MavenExplicitProfiles(Arrays.asList("two")));
     scheduleResolveAll();
     resolveDependenciesAndImport();
     compileModules("project");
