@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.util;
+package org.jetbrains.idea.maven.wizards;
 
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
