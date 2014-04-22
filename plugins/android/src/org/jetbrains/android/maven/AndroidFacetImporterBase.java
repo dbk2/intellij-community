@@ -655,7 +655,7 @@ public abstract class AndroidFacetImporterBase extends FacetImporter<AndroidFace
     final MavenArtifactResolvedInfo info = new MavenArtifactResolvedInfo();
     adm.setResolvedInfoForArtifact(artifact.getMavenId(), info);
 
-    projectForExternalApklib.read(generalSettings, mavenProjectsManager.getAvailableProfiles(), mavenProjectReader, locator);
+    projectForExternalApklib.read(generalSettings, mavenProjectsManager.getExplicitProfiles(), mavenProjectReader, locator);
     projectForExternalApklib.resolve(project, generalSettings, embedder, mavenProjectReader, locator);
 
     final String apiLevel = getPlatformFromConfig(projectForExternalApklib);

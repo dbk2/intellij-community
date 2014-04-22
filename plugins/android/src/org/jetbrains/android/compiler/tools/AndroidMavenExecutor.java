@@ -32,6 +32,7 @@ import org.jetbrains.android.util.WaitingStrategies;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.execution.MavenExternalParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
+import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 import java.util.ArrayList;
@@ -53,10 +54,10 @@ public class AndroidMavenExecutor {
   public static Map<CompilerMessageCategory, List<String>> generateResources(final Module module) {
     MavenProjectsManager projectsManager = MavenProjectsManager.getInstance(module.getProject());
 
+    MavenExplicitProfiles explicitProfiles = projectsManager.getExplicitProfiles();
     final MavenRunnerParameters parameters =
-      new MavenRunnerParameters(true, projectsManager.findProject(module).getDirectory(),
-                                Collections.singletonList("process-resources"),
-                                projectsManager.getExplicitProfiles());
+      new MavenRunnerParameters(true, projectsManager.findProject(module).getDirectory(), Collections.singletonList("process-resources"),
+                                explicitProfiles.getEnabledProfiles(), explicitProfiles.getDisabledProfiles());
 
     final Map<CompilerMessageCategory, List<String>> result = new HashMap<CompilerMessageCategory, List<String>>();
     result.put(CompilerMessageCategory.ERROR, new ArrayList<String>());
